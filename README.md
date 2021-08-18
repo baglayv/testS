@@ -1,16 +1,44 @@
-# testSynergy
+# test
 
-Какие принципы SOLID нарушены в проектировании сервиса отправки уведомлений
-- принцип открытости/закрытости (класс NotificationService напрямую 
-    использует классы EmailNotificator и SmsNotificator. Если используемые 
-    классы надо изменить, то есть большая вероятность что придется менять 
-    и класс NotificationService)
-- принцип инверсии зависимостей (зависимости должны строится относительно 
-    абстракций, а не деталей)
+Есть сервис для отправки уведомлений 
+ 
+class NotificationService 
+{ 
+   public function notify(User $user, $text)  
+   { 
+       $emailNotificator = new EmailNotificator(); 
+       $smsNotificator = new SmsNotificator(); 
+ 
+       $emailNotificator->sendEmail($user->email, $text); 
+       $smsNotificator>sendSms($user->phone, $text); 
+   } 
+} 
+ 
+class EmailNotificator 
+{ 
+   public function sendEmail($email, $text) 
+   { ... } 
+} 
+ 
+class SmsNotificator 
+{ 
+   public function sendSms($phone, $text)  
+   { ... } 
+} 
+ 
+Этот сервис сконфигурирован и отдан в клиентский код для выполнения рассылки 
+ 
+// Инициализация и конфигурация сервиса 
+$service = new NotificationService(); 
+ 
+// Клиентский код с доступом к готовому к работе объекту сервиса рассылки 
+$text = 'Какой-то текст'; 
+ 
+foreach ($users as $user) { 
+   $service->notify($user, $text); 
+} 
+ 
+ 
+Необходимо сделать рефакторинг сервиса, чтобы была возможность добавить третий способ отправки 
+уведомления. Например, WebPushNotificator 
 
-Какие паттерны проектировании можно использовать, что бы сделать сервис 
-более гибким и способным к легкому расширению способов рассылки
-- паттерны порождающие - фабрики 
-
-Какие еще проблемы есть в этом коде
-- по разному названы методы выполняющие идентичные действия.
