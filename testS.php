@@ -84,11 +84,14 @@ class WebPushNotificator implements iNotificator
 
 class NotificationService
 {
+    public $notificator;
+    public function __construct(iNotificator $notificator)
+    {
+        $this->notificator = $notificator;
+    }
     public function notity(User $user, $text)
     {
-        (new EmailNotificator)->send($user->email, $text);
-        (new SmsNotificator)->send($user->phone, $text);
-        (new WebPushNotificator)->send($tokenId, $text);
+        $this->notificator->send($user->email, $text);
     }
 } 
 
