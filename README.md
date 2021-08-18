@@ -3,22 +3,31 @@
 Есть сервис для отправки уведомлений 
  
 class NotificationService 
-{ 
+
+{
+
    public function notify(User $user, $text)  
-   { 
+   
+   {
+   
        $emailNotificator = new EmailNotificator(); 
+       
        $smsNotificator = new SmsNotificator(); 
- 
+        
        $emailNotificator->sendEmail($user->email, $text); 
+       
        $smsNotificator>sendSms($user->phone, $text); 
+       
+   }
    } 
-} 
+
  
 class EmailNotificator 
 { 
    public function sendEmail($email, $text) 
    { ... } 
 } 
+
  
 class SmsNotificator 
 { 
@@ -27,13 +36,13 @@ class SmsNotificator 
 } 
  
 Этот сервис сконфигурирован и отдан в клиентский код для выполнения рассылки 
- 
+
 // Инициализация и конфигурация сервиса 
 $service = new NotificationService(); 
  
 // Клиентский код с доступом к готовому к работе объекту сервиса рассылки 
 $text = 'Какой-то текст'; 
- 
+
 foreach ($users as $user) { 
    $service->notify($user, $text); 
 } 
